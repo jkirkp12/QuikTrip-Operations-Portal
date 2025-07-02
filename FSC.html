@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FSC DAW Checklist</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background-color: #000;
+      width: 100%;
+      padding: 0.75rem 2rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+      height: 56px;
+    }
+
+    header a.logo-link {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    header a.logo-link img {
+      height: 40px;
+      user-select: none;
+    }
+
+    nav {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      transition: background-color 0.25s ease;
+      user-select: none;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      height: 40px;
+    }
+
+    nav a:hover,
+    nav a:focus {
+      background-color: #d6001c;
+      outline: none;
+    }
+
+    nav a[aria-current="page"] {
+      background-color: #d6001c;
+      cursor: default;
+    }
+
+    main {
+      max-width: 700px;
+      margin: 80px auto 2rem;
+      background-image:
+        url('https://www.transparenttextures.com/patterns/asfalt-dark.png'), /* sick texture */
+        linear-gradient(135deg, #d6001c, #000);
+      background-blend-mode: overlay;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.4);
+      max-height: 85vh;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #d6001c transparent;
+      color: white;
+    }
+
+    /* scrollbar for WebKit */
+    main::-webkit-scrollbar {
+      width: 8px;
+    }
+    main::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    main::-webkit-scrollbar-thumb {
+      background-color: #d6001c;
+      border-radius: 10px;
+      border: 2px solid transparent;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 1rem;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      user-select: none;
+    }
+
+    .shift-group {
+      margin-bottom: 2rem;
+    }
+
+    .shift-group h2 {
+      border-bottom: 2px solid white;
+      padding-bottom: 0.3rem;
+      margin-bottom: 1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      user-select: none;
+    }
+
+    .task {
+      background-color: rgba(255 255 255 / 0.15);
+      border-radius: 6px;
+      padding: 12px 15px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      cursor: default;
+      user-select: none;
+      color: white;
+      justify-content: flex-start;
+      gap: 15px;
+    }
+
+    .checkbox {
+      width: 20px;
+      height: 20px;
+      border: 2px solid #ccc;
+      border-radius: 4px;
+      background-color: transparent;
+      cursor: pointer;
+      position: relative;
+      transition: background-color 0.3s, border-color 0.3s;
+    }
+
+    .checkbox.checked {
+      background-color: #e6b8b7; /* pink kinda color*/
+      border-color: #d6001c;
+    }
+
+    .checkbox.checked::after {
+      content: '✔';
+      color: #d6001c;
+      font-weight: 700;
+      position: absolute;
+      top: 1px;
+      left: 3px;
+      font-size: 16px;
+      user-select: none;
+      transition: color 0.3s;
+    }
+
+    .task-text {
+      flex-grow: 1;
+      font-weight: 600;
+    }
+
+    .task-info {
+      min-width: 90px;
+      font-size: 0.85em;
+      color: #f0f0f0;
+      font-weight: 700;
+      text-align: right;
+      font-family: monospace;
+      user-select: none;
+      opacity: 0.9;
+    }
+
+    #modalOverlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(0,0,0,0.75);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+    }
+
+    #modalBox {
+      background: linear-gradient(135deg, #d6001c, #000);
+      padding: 2rem 2.5rem;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(214, 0, 28, 0.8);
+      width: 90%;
+      max-width: 400px;
+      color: white;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    #modalBox h3 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+      font-size: 1.25rem;
+      letter-spacing: 1.2px;
+    }
+
+    #initialsInput {
+      width: 100%;
+      padding: 0.5rem;
+      font-size: 1.1rem;
+      border-radius: 6px;
+      border: none;
+      margin-bottom: 1rem;
+      box-sizing: border-box;
+    }
+
+    #modalButtons {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    #modalButtons button {
+      flex: 1;
+      padding: 0.6rem 0;
+      border: none;
+      border-radius: 6px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color 0.25s;
+      user-select: none;
+    }
+
+    #modalSubmit {
+      background-color: #000;
+      color: #d6001c;
+    }
+    #modalSubmit:hover {
+      background-color: #d6001c;
+      color: #000;
+    }
+
+    #modalCancel {
+      background-color: #333;
+      color: white;
+    }
+    #modalCancel:hover {
+      background-color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="index.html" class="logo-link" aria-label="Go to Home">
+      <img src="/Assets/Images/QuikTripLogo.png" alt="QuikTrip Logo" />
+    </a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="FSC.html" aria-current="page">FSC DAW</a>
+      <a href="WOW.html">Survey Hub</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>FSC DAW Checklist</h1>
+
+
+    <section class="shift-group" id="morning">
+      <h2>Morning</h2>
+      <div class="task" data-group="morning" data-task="CHECK DATES!">
+        <div class="checkbox" tabindex="0" role="checkbox" aria-checked="false"></div>
+        <div class="task-text">CHECK DATES!</div>
+        <div class="task-info"></div>
+      </div>
+      <div class="task" data-group="morning" data-task="SEC biscuits (16) Build up to 20 total">
+        <div class="checkbox" tabindex="0" role="checkbox" aria-checked="false"></div>
+        <div class="task-text">SEC biscuits (16) Build up to 20 total</div>
+        <div class="task-info"></div>
+      </div>
+      <div class="task" data-group="morning" data-task="Sausage biscuits (12) Build up">
+        <div class="checkbox" tabindex="0" role="checkbox" aria-checked="false"></div>
+        <div class="task-text">Sausage biscuits (12) Build up</div>
+        <div class="task-info"></div>
+      </div>
+      <div class="task" data-group="morning" data-task="Chicken biscuits (12) Build up total">
+        <div class="checkbox" tabindex="0" role="checkbox" aria-checked="false"></div>
+        <div class="task-text">Chicken biscuits (12) Build up total</div>
+        <div class="task-info"></div>
+      </div>
+      <div class="task" data-group="morning" data-task="SEC Croissant (24) build up to 25 total">
+        <div class="checkbox" tabindex="0" role="checkbox" aria-checked="false"></div>
+        <div class="task-text">SEC Croissant (24) build up to 25 total</div>
+        <div class="task-info"></div>
+      </div>
+      <div class="task" data-group="morning" data-task="Breakfast pans 2 pans of each">
+        <div class="checkbox" tabindex="0" role="checkbox" aria-checked="false"></div>
+        <div class="task-text">Breakfast pans 2 pans of each</div>
+        <div class="task-info"></div>
+      </div>
+      <div class="task" data-group="morning" data-task="Lunch pans: 3 Chicken pans, 4 pork, 4 brisket">
+        <div class="checkbox" tabindex="0" role="checkbox" aria-checked="false"></div>
+        <div class="task-text">Lunch pans: 3 Chicken pans, 4 pork, 4 brisket</div>
+        <div class="task-info"></div>
+      </div>
+      <div class="task" data-group="morning" data-task="CHECK DAW Tasks assigned!! Varies shift to shift">
+        <div class="checkbox" tabindex="0" role="checkbox" aria-checked="false"></div>
+        <div class="task-text">CHECK DAW Tasks assigned!! Varies shift to shift</div>
+        <div class="task-info"></div>
+      </div>
+      <div class="task" data-group="morning" data-task="Note: All pans in prep bars should be full of product at end of EACH shift. Morning to evening / Evening to closing">
+        <div class="checkbox" tabindex="0" role="checkbox" aria-checked="false"></div>
+        <div class="task-text">Note: All pans in prep bars should be full of product at end of EACH shift. Morning to evening / Evening to closing</div>
+        <div class="task-info"></div>
+      </div>
+    </section>
+
+    
+    <section class="shift-group" id="evening">
+      <h2>Evening</h2>
+<div class="task" data-group="evening" data-task="Cold Brew (STEEP IN BIG COOLER with bag, then bring in kitchen when ready with NO BAG)">
+        <div class="checkbox" tabindex="0" role="checkbox" aria-checked="false"></div>
+        <div class="task-text">Cold Brew (STEEP IN BIG COOLER with bag, then bring in kitchen when ready with NO BAG)</div>
+        <div class="task-info"></div>
+      </div>
+      <div class="task" data-group="evening" data-task="Only prep if the one on hand will go out of date that night">
+        <div class="checkbox" tabindex="0" role="checkbox" aria-checked="false"></div>
+        <div class="task-text">Only prep if the one on hand will go out of date that night</div>
+        <div class="task-info"></div>
+      </div>
+      <div class="task" data-group="evening" data-task="Sausage Crumbles (1 bag unopened thawing)">
+        <div class="checkbox" tabindex="0" role="checkbox" aria-checked="false"></div>
+        <div class="task-text">Sausage Crumbles (1 bag unopened thawing)</div>
+        <div class="task-info"></div>
+      </div>
+      <div class="task" data-group="evening" data-task="Egg Scrambled (4 bags unopened thawing)">
+        <div class="checkbox" tabindex="0" role="checkbox" aria-checked="false"></div>
+        <div class="task-text">Egg Scrambled (4 bags unopened thawing)</div>
+        <div class="task-info"></div>
+      </div>
+      <div class="task" data-group="evening" data-task="Sausage patties (1 bag unopened thawing)">
+        <div class="checkbox" tabindex="0" role="checkbox" aria-checked="false"></div>
+        <div class="task-text">Sausage patties (1 bag unopened thawing)</div>
+        <div class="task-info"></div>
+      </div>
+      <div class="task" data-group="evening" data-task="Egg Patties (1 bag unopened thawing)">
+        <div class="checkbox" tabindex="0" role="checkbox" aria-checked="false"></div>
+        <div class="task-text">Egg Patties (1 bag unopened thawing)</div>
+        <div class="task-info"></div>
+      </div>
+      <div class="task" data-group="evening" data-task="Grilled chicken (2 bags unopened thawing, 3 STICKERS PER BAG)">
+        <div class="checkbox" tabindex="0" role="checkbox" aria-checked="false"></div>
+        <div class="task-text">Grilled chicken (2 bags unopened thawing, 3 STICKERS PER BAG)</div>
+        <div class="task-info"></div>
+      </div>
+      <div class="task" data-group="evening" data-task="Chicken Patties (1 bag unopened thawing)">
+        <div class="checkbox" tabindex="0" role="checkbox" aria-checked="false"></div>
+        <div class="task-text">Chicken Patties (1 bag unopened thawing)</div>
+        <div class="task-info"></div>
+      </div>
+      <div class="task" data-group="evening" data-task="Croissants (1 box pulled)">
+        <div class="checkbox" tabindex="0" role="checkbox" aria-checked="false"></div>
+        <div class="task-text">Croissants (1 box pulled)</div>
+        <div class="task-info"></div>
+      </div>
+      <div class="task" data-group="evening" data-task="Grilled cheese (4 bags thawing)">
+        <div class="checkbox" tabindex="0" role="checkbox" aria-checked="false"></div>
+        <div class="task-text">Grilled cheese (4 bags thawing)</div>
+        <div class="task-info"></div>
+      </div>
+      <div class="task" data-group="evening" data-task="Pretzels (20 thawing)">
+        <div class="checkbox" tabindex="0" role="checkbox" aria-checked="false"></div>
+        <div class="task-text">Pretzels (20 thawing)</div>
+        <div class="task-info"></div>
+      </div>
+      <div class="task" data-group="evening" data-task="Biscuits (4 trays thawing)">
+        <div class="checkbox" tabindex="0" role="checkbox" aria-checked="false"></div>
+        <div class="task-text">Biscuits (4 trays thawing)</div>
+        <div class="task-info"></div>
+      </div>
+      <div class="task" data-group="evening" data-task="White subs / Wheat subs (3 bags each thawing)">
+        <div class="checkbox" tabindex="0" role="checkbox" aria-checked="false"></div>
+        <div class="task-text">White subs / Wheat subs (3 bags each thawing)</div>
+        <div class="task-info"></div>
+      </div>
+      <div class="task" data-group="evening" data-task="Build Up to 17- 16&quot; Pizza crusts (if we have 15 out just prep 2 to build up to 17)">
+        <div class="checkbox" tabindex="0" role="checkbox" aria-checked="false"></div>
+        <div class="task-text">Build Up to 17- 16" Pizza crusts (if we have 15 out just prep 2 to build up to 17)</div>
+        <div class="task-info"></div>
+      </div>
+      <div class="task" data-group="evening" data-task="7” crust - Build Up to 15 for weekdays, 12 for weekends">
+        <div class="checkbox" tabindex="0" role="checkbox" aria-checked="false"></div>
+        <div class="task-text">7” crust - Build Up to 15 for weekdays, 12 for weekends</div>
+        <div class="task-info"></div>
+      </div>
+      <div class="task" data-group="evening" data-task="Mac n Cheese (2 bags thawing)">
+        <div class="checkbox" tabindex="0" role="checkbox" aria-checked="false"></div>
+        <div class="task-text">Mac n Cheese (2 bags thawing)</div>
+        <div class="task-info"></div>
+      </div>
+      <div class="task" data-group="evening" data-task="Gravy (2 bags thawing)">
+        <div class="checkbox" tabindex="0" role="checkbox" aria-checked="false"></div>
+        <div class="task-text">Gravy (2 bags thawing)</div>
+        <div class="task-info"></div>
+      </div>
+    </section>
+
+    <section class="shift-group" id="closing">
+      <h2>Closing Cleaning</h2>
+      <div class="task" data-group="closing" data-task="Wipe down all fronts of coolers and ice cream machine">
+        <div class="checkbox" tabindex="0" role="checkbox" aria-checked="false"></div>
+        <div class="task-text">Wipe down all fronts of coolers and ice cream machine</div>
+        <div class="task-info"></div>
+      </div>
+      <div class="task" data-group="closing" data-task="WASH all dishes">
+        <div class="checkbox" tabindex="0" role="checkbox" aria-checked="false"></div>
+        <div class="task-text">WASH all dishes</div>
+        <div class="task-info"></div>
+      </div>
+      <div class="task" data-group="closing" data-task="Full Ice Cream Machine (Except on Tuesday)">
+        <div class="checkbox" tabindex="0" role="checkbox" aria-checked="false"></div>
+        <div class="task-text">Full Ice Cream Machine (Except on Tuesday)</div>
+        <div class="task-info"></div>
+      </div>
+      <div class="task" data-group="closing" data-task="Fill boxes, condiments (HALF WAY AND UNDER THROW AWAY AND REPLACE), napkins, cups, lids">
+        <div class="checkbox" tabindex="0" role="checkbox" aria-checked="false"></div>
+        <div class="task-text">Fill boxes, condiments (HALF WAY AND UNDER THROW AWAY AND REPLACE), napkins, cups, lids</div>
+        <div class="task-info"></div>
+      </div>
+      <div class="task" data-group="closing" data-task="CLEAN AMANA OVENS (use green scrubby pads!)">
+        <div class="checkbox" tabindex="0" role="checkbox" aria-checked="false"></div>
+        <div class="task-text">CLEAN AMANA OVENS (use green scrubby pads!)</div>
+        <div class="task-info"></div>
+      </div>
+      <div class="task" data-group="closing" data-task="CLEAN PIZZA OVENS (use white brush to brush crumbs off the chain)">
+        <div class="checkbox" tabindex="0" role="checkbox" aria-checked="false"></div>
+        <div class="task-text">CLEAN PIZZA OVENS (use white brush to brush crumbs off the chain)</div>
+        <div class="task-info"></div>
+      </div>
+      <div class="task" data-group="closing" data-task="CLEAN STEAM N HOLD (Delime Thursdays)">
+        <div class="checkbox" tabindex="0" role="checkbox" aria-checked="false"></div>
+        <div class="task-text">CLEAN STEAM N HOLD (Delime Thursdays)</div>
+        <div class="task-info"></div>
+      </div>
+      <div class="task" data-group="closing" data-task="CLEAN COMBI OVENS (check and replace detergents when needed)">
+        <div class="checkbox" tabindex="0" role="checkbox" aria-checked="false"></div>
+        <div class="task-text">CLEAN COMBI OVENS (check and replace detergents when needed)</div>
+        <div class="task-info"></div>
+      </div>
+      <div class="task" data-group="closing" data-task="Scrape pizza screens clean">
+        <div class="checkbox" tabindex="0" role="checkbox" aria-checked="false"></div>
+        <div class="task-text">Scrape pizza screens clean</div>
+        <div class="task-info"></div>
+      </div>
+      <div class="task" data-group="closing" data-task="Wipe black trays clean">
+        <div class="checkbox" tabindex="0" role="checkbox" aria-checked="false"></div>
+        <div class="task-text">Wipe black trays clean</div>
+        <div class="task-info"></div>
+      </div>
+      <div class="task" data-group="closing" data-task="Wipe away crumbs and dust off shelving">
+        <div class="checkbox" tabindex="0" role="checkbox" aria-checked="false"></div>
+        <div class="task-text">Wipe away crumbs and dust off shelving</div>
+        <div class="task-info"></div>
+      </div>
+      <div class="task" data-group="closing" data-task="Take blender apart and clean (HAND WASH ONLY)">
+        <div class="checkbox" tabindex="0" role="checkbox" aria-checked="false"></div>
+        <div class="task-text">Take blender apart and clean (HAND WASH ONLY)</div>
+        <div class="task-info"></div>
+      </div>
+      <div class="task" data-group="closing" data-task="Clean warmer (use brush to get crumbs out of the cracks)">
+        <div class="checkbox" tabindex="0" role="checkbox" aria-checked="false"></div>
+        <div class="task-text">Clean warmer (use brush to get crumbs out of the cracks)</div>
+        <div class="task-info"></div>
+      </div>
+    </section>
+  </main>
+
+  <div id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalDesc">
+    <div id="modalBox">
+      <h3 id="modalTitle">Enter your initials for:</h3>
+      <div id="modalTaskName" style="margin-bottom:1rem; font-style: italic;"></div>
+      <input type="text" id="initialsInput" maxlength="5" autocomplete="off" aria-label="Enter your initials" />
+      <div id="modalButtons">
+        <button id="modalSubmit">Submit</button>
+        <button id="modalCancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const tasks = document.querySelectorAll('.task');
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalTaskName = document.getElementById('modalTaskName');
+    const initialsInput = document.getElementById('initialsInput');
+    const modalSubmit = document.getElementById('modalSubmit');
+    const modalCancel = document.getElementById('modalCancel');
+
+    let currentTask = null;
+
+    function formatTimestamp(date) {
+      let hours = date.getHours();
+      let minutes = date.getMinutes();
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12;
+      hours = hours ? hours : 12;
+      minutes = minutes < 10 ? '0' + minutes : minutes;
+      return `${hours}:${minutes} ${ampm}`;
+    }
+
+    function openModal(taskEl) {
+      currentTask = taskEl;
+      modalTaskName.textContent = taskEl.dataset.task;
+      initialsInput.value = '';
+      modalOverlay.style.display = 'flex';
+      initialsInput.focus();
+    }
+
+    function closeModal() {
+      modalOverlay.style.display = 'none';
+      currentTask = null;
+    }
+
+    tasks.forEach(task => {
+      const checkbox = task.querySelector('.checkbox');
+      checkbox.addEventListener('click', () => {
+        if (checkbox.classList.contains('checked')) return;
+        openModal(task);
+      });
+      checkbox.addEventListener('keydown', (e) => {
+        if (e.key === ' ' || e.key === 'Enter') {
+          e.preventDefault();
+          if (checkbox.classList.contains('checked')) return;
+          openModal(task);
+        }
+      });
+    });
+
+    modalSubmit.addEventListener('click', () => {
+      const initials = initialsInput.value.trim();
+      if (initials.length === 0) {
+        alert('Please enter your initials.');
+        initialsInput.focus();
+        return;
+      }
+      const checkbox = currentTask.querySelector('.checkbox');
+      const info = currentTask.querySelector('.task-info');
+      checkbox.classList.add('checked');
+      checkbox.setAttribute('aria-checked', 'true');
+      const now = new Date();
+      info.textContent = `${initials.toUpperCase()} @ ${formatTimestamp(now)}`;
+      closeModal();
+    });
+
+    modalCancel.addEventListener('click', closeModal);
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modalOverlay.style.display === 'flex') {
+        closeModal();
+      }
+    });
+  </script>
+<footer style="text-align:center; padding:1rem; font-size:0.8rem; color:#555;">
+  QuikTrip Corporation | Created by Jacob Kirkpatrick | 470-659-5737 | Jacobkirkpatrickba@gmail.com &nbsp;&nbsp;
+</footer>
+</body>
+</html>

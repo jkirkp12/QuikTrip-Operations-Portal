@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>QT Survey & Checklist Hub</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-image:
+        url('https://www.transparenttextures.com/patterns/asfalt-dark.png'),
+        linear-gradient(135deg, #d6001c, #000);
+      background-blend-mode: overlay;
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 2rem 3rem;
+      text-align: center;
+    }
+
+    header {
+      background-color: #000;
+      width: 100%;
+      padding: 0.75rem 2rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: fixed; /*make sure that its compatible with multiple platforms */
+      top: 0;
+      left: 0;
+      z-index: 1000;
+      height: 56px;
+    }
+
+    header a.logo-link {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    header a.logo-link img {
+      height: 40px;
+      user-select: none;
+    }
+
+    nav {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      transition: background-color 0.25s ease;
+      user-select: none;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      height: 40px;
+    }
+
+    nav a:hover,
+    nav a:focus {
+      background-color: #d6001c;
+      outline: none;
+    }
+
+    main {
+      max-width: 700px;
+      margin: 80px auto 0;
+      padding: 0 1rem;
+    }
+
+    h1 {
+      margin-bottom: 1rem;
+      letter-spacing: 1.5px;
+      font-weight: 900;
+      text-shadow: 0 0 5px rgba(214,0,28,0.7);
+      user-select: none;
+    }
+
+    p.description {
+      font-weight: 600;
+      line-height: 1.4;
+      margin-bottom: 2.5rem;
+      user-select: none;
+    }
+
+    .button-container {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 600px;
+      width: 100%;
+    }
+
+    a.button {
+      flex: 1 1 250px;
+      background-color: #d6001c;
+      color: white;
+      text-decoration: none;
+      padding: 1.5rem 2rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 8px rgba(214,0,28,0.5);
+      transition: background-color 0.3s ease;
+      user-select: none;
+    }
+
+    a.button:hover,
+    a.button:focus {
+      background-color: #a00015;
+      outline: none;
+      box-shadow: 0 0 15px #ff0000;
+    }
+
+    footer {
+      margin-top: 3rem;
+      font-size: 0.85rem;
+      opacity: 0.6;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="index.html" class="logo-link" aria-label="Go to Home">
+      <img src="/Assets/Images/QuikTripLogo.png" alt="QuikTrip Logo" />
+    </a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="FSC.html">FSC DAW</a>
+      <a href="WOW.html">Survey Hub</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>QT Survey & Checklist Hub</h1>
+
+    <p class="description">
+      These tools could be implemented into the QuikTrip system to streamline workflows and improve data collection. A separate DAW could be used specifically for FSC tasks, while the Coffee Wow Survey could be integrated into the Epic V2 platform for easier access. This survey might be assigned as an acknowledgment or message before employees clock out.<br><br>
+      Using this approach over Microsoft Forms solves issues like managers not being able to scan QR codes easily, making it simpler for workers and administrators alike. An API could further automate assistance requests and synchronize directly with Facility Support teams for faster response times.
+    </p>
+
+    <div class="button-container">
+      <a href="FSC.html" class="button" aria-label="Open FSC DAW Checklist">FSC DAW Checklist</a>
+      <a href="WOW.html" class="button" aria-label="Open QT Coffee Wow Survey">QT Coffee Wow Survey</a>
+    </div>
+  </main>
+
+<footer style="text-align:center; padding:1rem; font-size:0.8rem; color:#555;">
+  QuikTrip Corporation | Created by Jacob Kirkpatrick | 470-659-5737 | Jacobkirkpatrickba@gmail.com &nbsp;&nbsp;
+</footer>
+</body>
+</html>
